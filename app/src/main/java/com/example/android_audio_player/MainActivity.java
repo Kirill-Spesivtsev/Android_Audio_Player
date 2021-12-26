@@ -22,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+    public static final int ALL_PERMISSIONS_REQUEST_CODE = 1234;
+
+    public AudioAdapter audioAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
