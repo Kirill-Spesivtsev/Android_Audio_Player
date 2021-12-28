@@ -16,13 +16,13 @@ import java.util.ArrayList;
 
 public class AudioAdapter extends BaseAdapter {
 
-    ArrayList<String> objects;
+    ArrayList<Song> objects;
 
     Context context;
 
     LayoutInflater inflater;
 
-    AudioAdapter(Context con, ArrayList<String> obj){
+    AudioAdapter(Context con, ArrayList<Song> obj){
         objects = obj;
         context = con;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -46,14 +46,21 @@ public class AudioAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v = inflater.inflate(R.layout.list_item,null);
-        TextView currentSong = v.findViewById(R.id.textview_song_title);
-        currentSong.setSelected(true);
-        currentSong.setTypeface(Typeface.DEFAULT);
-        currentSong.setText(objects.get(i));
+        TextView songTitle = v.findViewById(R.id.textview_song_title);
+        TextView songArtist = v.findViewById(R.id.textview_song_artist);
+        //songTitle.setSelected(true);
+        //songTitle.setTypeface(Typeface.DEFAULT);
+        songTitle.setText(objects.get(i).title);
+        songArtist.setText(objects.get(i).artist);
+
         return v;
     }
 
-    public ArrayList<String> getList(){
+    public int getPosition(Song s){
+        return objects.indexOf(s);
+    }
+
+    public ArrayList<Song> getList(){
         return objects;
     }
 }
