@@ -1,5 +1,7 @@
 package com.example.android_audio_player;
 
+import static android.os.SystemClock.sleep;
+
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -22,10 +24,14 @@ public class AudioPlayerFragment extends Fragment {
 
     private FragmentAudioPlayerBinding binding;
 
+
     Button btnPlay, btnNext, btnPrev, btnFF, btnRev;
     TextView strSongsTitle, strSongArtist, strSongCurTime, strSongMaxTime;
     SeekBar seekBarSongProgress;
     ImageView imageViewAlbum;
+
+    Thread updateSeekBarPositionThread;
+
 
     @Override
     public View onCreateView(
@@ -61,7 +67,16 @@ public class AudioPlayerFragment extends Fragment {
             e.printStackTrace();
         }
 
+        updateSeekBarPositionThread = new Thread(){
+            @Override
+            public void run() {
+                updateSeekBar();
+            }
+        };
+
+
         seekBarSongProgress.setMax(MainActivity.mediaPlayer.getDuration());
+        updateSeekBarPositionThread.start();
 
         seekBarSongProgress.getProgressDrawable().setColorFilter(getResources()
                 .getColor(R.color.white), PorterDuff.Mode.MULTIPLY);
@@ -81,7 +96,7 @@ public class AudioPlayerFragment extends Fragment {
         seekBarSongProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                String newTime = buildTimeStamp(progress);
+                String newTime = buildTimeStamp(MainActivity.mediaPlayer.getCurrentPosition());
                 strSongCurTime.setText(newTime);
             }
 
@@ -110,7 +125,6 @@ public class AudioPlayerFragment extends Fragment {
                 }
             }
         });
-
     }
 
     @Override
@@ -147,4 +161,14 @@ public class AudioPlayerFragment extends Fragment {
         imageViewAlbum = requireView().findViewById(R.id.imageview);
     }
 
+
+    private void updateSeekBar(){
+        int maxPos = MainActivity.mediaPlayer.getDuration();
+        int curPos = MainActivity.mediaPlayer.getCurrentPosition();;
+        while(curPos < maxPos){
+            curPos = MainActivity.mediaPlayer.getCurrentPosition();
+            seekBarSongProgress.setProgress(curPos);
+            sleep(500);
+        }
+    };
 }
