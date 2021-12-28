@@ -125,6 +125,77 @@ public class AudioPlayerFragment extends Fragment {
                 }
             }
         });
+
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.mediaPlayer.stop();
+                MainActivity.mediaPlayer.release();
+                int position = MainActivity.audioAdapter.getPosition(MainActivity.currentSong);
+                position = ((position + 1) % MainActivity.audioAdapter.getCount());
+                MainActivity.currentSong = (Song) MainActivity.audioAdapter.getItem(position);
+                MainActivity.mediaPlayer = new MediaPlayer();
+                try {
+                    MainActivity.mediaPlayer.setDataSource(MainActivity.currentSong.fullPath);
+                    MainActivity.mediaPlayer.prepare();
+                    MainActivity.mediaPlayer.start();
+                    btnPlay.setBackgroundResource(R.drawable.ic_pause);
+                    strSongsTitle.setText(MainActivity.currentSong.title);
+                    strSongArtist.setText(MainActivity.currentSong.artist);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        btnPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.mediaPlayer.stop();
+                MainActivity.mediaPlayer.release();
+                int position = MainActivity.audioAdapter.getPosition(MainActivity.currentSong);
+                if (position <= 0){
+                    position = MainActivity.audioAdapter.getCount() - 1;
+                }
+                else{
+                    position--;
+                }
+                MainActivity.currentSong = (Song) MainActivity.audioAdapter.getItem(position);
+                MainActivity.mediaPlayer = new MediaPlayer();
+                try {
+                    MainActivity.mediaPlayer.setDataSource(MainActivity.currentSong.fullPath);
+                    MainActivity.mediaPlayer.prepare();
+                    MainActivity.mediaPlayer.start();
+                    btnPlay.setBackgroundResource(R.drawable.ic_pause);
+                    strSongsTitle.setText(MainActivity.currentSong.title);
+                    strSongArtist.setText(MainActivity.currentSong.artist);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        btnFF.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MainActivity.mediaPlayer.isPlaying()){
+                    MainActivity.mediaPlayer.seekTo(
+                            MainActivity.mediaPlayer.getCurrentPosition() + 5000);
+                }
+            }
+        });
+
+        btnRev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MainActivity.mediaPlayer.isPlaying()){
+                    MainActivity.mediaPlayer.seekTo(
+                            MainActivity.mediaPlayer.getCurrentPosition() - 5000);
+                }
+            }
+        });
     }
 
     @Override
