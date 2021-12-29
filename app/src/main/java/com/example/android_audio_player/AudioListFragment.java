@@ -165,28 +165,9 @@ public class AudioListFragment extends Fragment {
     }
 
     private void displayContent(){
-        //Toast.makeText(requireActivity(), "You passed!", Toast.LENGTH_SHORT).show();
-
-        //ExecutorService threadpool = Executors.newCachedThreadPool();
-        //Future<ArrayList<Song>> futureTask = threadpool.submit(() -> searchAudio());;
-
         ArrayList<Song> songs = searchAudio();
-
-
-        //try {
-            //songs = futureTask.get();
-
-
-        //threadpool.shutdown();
-
-        //ArrayList<Song> songs = searchAudio();
-
-        //if (songs.size() == 0){throw  new NullPointerException();}
-
         MainActivity.audioAdapter = new AudioAdapter(requireActivity(), songs);
         listViewSongs.setAdapter(MainActivity.audioAdapter);
-
-
     }
 
 }
