@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.android_audio_player.databinding.FragmentAudioPlayerBinding;
 
@@ -39,6 +41,7 @@ public class AudioPlayerFragment extends Fragment {
     TextView strSongsTitle, strSongArtist, strSongCurTime, strSongMaxTime;
     SeekBar seekBarSongProgress;
     ImageView imageViewAlbum;
+    LinearLayout playerParentLayout;
 
     Thread updateSeekBarPositionThread;
 
@@ -86,6 +89,22 @@ public class AudioPlayerFragment extends Fragment {
                 MainActivity.mediaPlayer.seekTo(seekBar.getProgress());
                 String newTime = buildTimeStamp(MainActivity.mediaPlayer.getCurrentPosition());
                 strSongCurTime.setText(newTime);
+            }
+        });
+
+        playerParentLayout.setOnTouchListener(new OnSwipeTouchListener(requireActivity()){
+            public void onSwipeTop() {
+
+            }
+            public void onSwipeRight() {
+                btnNext.performClick();
+            }
+            public void onSwipeLeft() {
+                btnPrev.performClick();
+            }
+            public void onSwipeBottom() {
+                NavHostFragment.findNavController(AudioPlayerFragment.this)
+                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
             }
         });
 
@@ -151,6 +170,7 @@ public class AudioPlayerFragment extends Fragment {
         strSongMaxTime = requireView().findViewById(R.id.text_max_time);
         seekBarSongProgress = requireView().findViewById(R.id.seekbar);
         imageViewAlbum = requireView().findViewById(R.id.image_album);
+        playerParentLayout = requireView().findViewById(R.id.player_parent_layout);
     }
 
     private void prepareResponsiveSeekbar(){
@@ -189,6 +209,7 @@ public class AudioPlayerFragment extends Fragment {
             isPlayerReleased = false;
             btnPlay.setBackgroundResource(R.drawable.ic_pause);
             strSongsTitle.setText(MainActivity.currentSong.title);
+            strSongsTitle.setSelected(true);
             strSongArtist.setText(MainActivity.currentSong.artist);
 
             createNotificationChannel();
@@ -232,6 +253,7 @@ public class AudioPlayerFragment extends Fragment {
             strSongMaxTime.setText(endTime);
             btnPlay.setBackgroundResource(R.drawable.ic_pause);
             strSongsTitle.setText(MainActivity.currentSong.title);
+            strSongsTitle.setSelected(true);
             strSongArtist.setText(MainActivity.currentSong.artist);
         } catch (IOException e) {
             e.printStackTrace();
@@ -266,6 +288,7 @@ public class AudioPlayerFragment extends Fragment {
             strSongMaxTime.setText(endTime);
             btnPlay.setBackgroundResource(R.drawable.ic_pause);
             strSongsTitle.setText(MainActivity.currentSong.title);
+            strSongsTitle.setSelected(true);
             strSongArtist.setText(MainActivity.currentSong.artist);
         } catch (IOException e) {
             e.printStackTrace();
